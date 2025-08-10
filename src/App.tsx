@@ -16,6 +16,7 @@ import { BillingPage } from '@/pages/BillingPage';
 import { ReportsPage } from '@/pages/ReportsPage';
 import { UsersPage } from '@/pages/UsersPage';
 import { RealTimePage } from '@/pages/RealTimePage';
+import { FormViewerPage } from '@/pages/FormViewerPage';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -131,6 +132,16 @@ function App() {
                   <ProtectedRoute requiredRoles={['ADMIN', 'BACKEND']}>
                     <Layout>
                       <RealTimePage />
+                    </Layout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/forms"
+                element={
+                  <ProtectedRoute requiredRoles={['ADMIN', 'BACKEND']}>
+                    <Layout>
+                      <FormViewerPage />
                     </Layout>
                   </ProtectedRoute>
                 }

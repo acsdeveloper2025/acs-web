@@ -9,7 +9,8 @@ import {
   UserCog,
   CheckSquare,
   Settings,
-  Wifi
+  Wifi,
+  FileText
 } from 'lucide-react';
 
 export interface NavigationItem {
@@ -163,6 +164,13 @@ export const navigationItems: NavigationItem[] = [
     label: 'Real-time Features',
     href: '/realtime',
     icon: Wifi,
+    roles: ['ADMIN', 'BACKEND'],
+  },
+  {
+    id: 'forms',
+    label: 'Form Viewer',
+    href: '/forms',
+    icon: FileText,
     roles: ['ADMIN', 'BACKEND'],
   },
 ];
