@@ -173,4 +173,11 @@ export const navigationItems: NavigationItem[] = [
     icon: FileText,
     roles: ['ADMIN', 'BACKEND'],
   },
+  {
+    id: 'security-ux',
+    label: 'Security & UX',
+    href: '/security-ux',
+    icon: Shield,
+    roles: ['ADMIN'],
+  },
 ];

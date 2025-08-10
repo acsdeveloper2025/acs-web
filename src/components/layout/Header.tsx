@@ -1,6 +1,7 @@
 import React from 'react';
 import { Menu, Bell, Moon, Sun, LogOut, User, Settings } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { NotificationCenter } from '@/components/realtime/NotificationCenter';
 import { ConnectionStatus } from '@/components/realtime/ConnectionStatus';
 import { Button } from '@/components/ui/button';
@@ -20,15 +21,10 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
   const { user, logout } = useAuth();
-  const [isDarkMode, setIsDarkMode] = React.useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   const handleLogout = async () => {
     await logout();
-  };
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    document.documentElement.classList.toggle('dark');
   };
 
   const getUserInitials = (name: string) => {
@@ -65,17 +61,20 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
             <ConnectionStatus showText />
           </div>
 
-          {/* Dark mode toggle */}
+          {/* Theme toggle */}
           <Button
             variant="ghost"
             size="icon"
-            onClick={toggleDarkMode}
+            onClick={toggleTheme}
             className="hidden sm:flex"
+            title={`Switch to ${theme === 'light' ? 'dark' : theme === 'dark' ? 'system' : 'light'} theme`}
           >
-            {isDarkMode ? (
+            {theme === 'dark' ? (
               <Sun className="h-5 w-5" />
-            ) : (
+            ) : theme === 'light' ? (
               <Moon className="h-5 w-5" />
+            ) : (
+              <Settings className="h-5 w-5" />
             )}
           </Button>
 

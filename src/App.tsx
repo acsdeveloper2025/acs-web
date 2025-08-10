@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Layout } from '@/components/layout/Layout';
 import { LoginPage } from '@/pages/LoginPage';
@@ -17,6 +19,7 @@ import { ReportsPage } from '@/pages/ReportsPage';
 import { UsersPage } from '@/pages/UsersPage';
 import { RealTimePage } from '@/pages/RealTimePage';
 import { FormViewerPage } from '@/pages/FormViewerPage';
+import { SecurityUXPage } from '@/pages/SecurityUXPage';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -30,10 +33,12 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <Router>
-          <div className="min-h-screen bg-background">
+    <ErrorBoundary>
+      <ThemeProvider defaultTheme="system" storageKey="acs-theme">
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <Router>
+              <div className="min-h-screen bg-background">
             <Routes>
               <Route path="/login" element={<LoginPage />} />
               <Route
@@ -146,6 +151,16 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/security-ux"
+                element={
+                  <ProtectedRoute requiredRoles={['ADMIN']}>
+                    <Layout>
+                      <SecurityUXPage />
+                    </Layout>
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Routes>
@@ -154,6 +169,8 @@ function App() {
         <Toaster position="top-right" />
       </AuthProvider>
     </QueryClientProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 
