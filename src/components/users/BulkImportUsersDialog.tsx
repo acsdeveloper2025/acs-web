@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import { usersService } from '@/services/users';
 
 interface BulkImportUsersDialogProps {

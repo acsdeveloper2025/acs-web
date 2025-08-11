@@ -10,7 +10,7 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { useErrorHandling } from '@/hooks/useErrorHandling';
 import { LoadingSpinner, LoadingOverlay, LoadingCard, LoadingSkeleton, LoadingButton } from '@/components/ui/loading';
 import { SecurityUtils } from '@/utils/security';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 
 export function SecurityUXPage() {
   const { theme, actualTheme, setTheme, toggleTheme } = useTheme();

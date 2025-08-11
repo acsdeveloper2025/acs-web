@@ -29,7 +29,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import { clientsService } from '@/services/clients';
 
 const createProductSchema = z.object({

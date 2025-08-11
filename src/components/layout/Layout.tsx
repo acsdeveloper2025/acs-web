@@ -20,10 +20,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen bg-background">
       <Sidebar isOpen={sidebarOpen} onClose={handleSidebarClose} />
-      <div className="lg:pl-64 transition-all duration-300">
+      <div className="lg:pl-64 transition-all duration-300 min-h-screen flex flex-col">
         <Header onMenuClick={handleMenuClick} />
-        <main className="py-6 animate-fade-in">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <main className="flex-1 py-6 animate-fade-in">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-full">
             {children}
           </div>
         </main>

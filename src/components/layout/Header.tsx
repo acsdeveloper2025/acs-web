@@ -56,7 +56,7 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
   };
 
   return (
-    <header className="bg-card shadow-sm border-b border-border lg:pl-64 backdrop-blur-sm">
+    <header className="bg-card shadow-sm border-b border-border backdrop-blur-sm sticky top-0 z-40">
       <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
         {/* Mobile menu button */}
         <Button

@@ -9,7 +9,7 @@ import { RealTimeDashboard } from '@/components/realtime/RealTimeDashboard';
 import { RealTimeCaseUpdates } from '@/components/realtime/RealTimeCaseUpdates';
 import { ConnectionStatus } from '@/components/realtime/ConnectionStatus';
 import { useWebSocket } from '@/hooks/useWebSocket';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 
 export function RealTimePage() {
   const [activeTab, setActiveTab] = useState('dashboard');

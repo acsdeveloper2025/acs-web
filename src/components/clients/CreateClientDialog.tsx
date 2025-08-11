@@ -22,7 +22,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import { clientsService } from '@/services/clients';
 
 const createClientSchema = z.object({
@@ -53,14 +53,27 @@ export function CreateClientDialog({ open, onOpenChange }: CreateClientDialogPro
 
   const createMutation = useMutation({
     mutationFn: (data: CreateClientFormData) => clientsService.createClient(data),
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ['clients'] });
       toast.success('Client created successfully');
       form.reset();
       onOpenChange(false);
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Failed to create client');
+      console.error('Error creating client:', error);
+
+      // Handle different types of errors
+      if (error.response?.status === 400 && error.response?.data?.error?.code === 'DUPLICATE_CODE') {
+        toast.error('Client code already exists. Please choose a different code.');
+      } else if (error.response?.status === 401) {
+        toast.error('You are not authorized to create clients. Please log in again.');
+      } else if (error.response?.status === 403) {
+        toast.error('You do not have permission to create clients.');
+      } else if (error.response?.status >= 500) {
+        toast.error('Server error. Please try again later.');
+      } else {
+        toast.error(error.response?.data?.message || 'Failed to create client. Please try again.');
+      }
     },
   });
 
@@ -86,6 +99,11 @@ export function CreateClientDialog({ open, onOpenChange }: CreateClientDialogPro
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {createMutation.isPending && (
+              <div className="text-sm text-muted-foreground">
+                Creating client...
+              </div>
+            )}
             <FormField
               control={form.control}
               name="name"

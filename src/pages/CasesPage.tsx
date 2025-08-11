@@ -16,9 +16,15 @@ export const CasesPage: React.FC = () => {
     sortOrder: 'desc',
   });
 
-  const { data: casesData, isLoading, refetch } = useCases(filters);
+  // Add error handling
+  const { data: casesData, isLoading, error, refetch } = useCases(filters);
   const updateStatusMutation = useUpdateCaseStatus();
   const assignCaseMutation = useAssignCase();
+
+  // Debug logging
+  console.log('CasesPage - casesData:', casesData);
+  console.log('CasesPage - isLoading:', isLoading);
+  console.log('CasesPage - error:', error);
 
   const cases = casesData?.data || [];
   const pagination = casesData?.pagination || {

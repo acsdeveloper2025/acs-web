@@ -27,9 +27,15 @@ export const CaseFilters: React.FC<CaseFiltersProps> = ({
   isLoading,
 }) => {
   const handleFilterChange = (key: keyof CaseListQuery, value: string | number | undefined) => {
+    // Ensure Select components receive empty string instead of undefined
+    let processedValue = value;
+    if (value === '' || value === undefined || value === null) {
+      processedValue = undefined; // Remove from filters object
+    }
+
     onFiltersChange({
       ...filters,
-      [key]: value || undefined,
+      [key]: processedValue,
     });
   };
 
@@ -80,15 +86,15 @@ export const CaseFilters: React.FC<CaseFiltersProps> = ({
           <div className="space-y-2">
             <Label>Status</Label>
             <Select
-              value={filters.status || ''}
-              onValueChange={(value) => handleFilterChange('status', value)}
+              value={filters.status || 'ALL'}
+              onValueChange={(value) => handleFilterChange('status', value === 'ALL' ? undefined : value)}
               disabled={isLoading}
             >
               <SelectTrigger>
                 <SelectValue placeholder="All statuses" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All statuses</SelectItem>
+                <SelectItem value="ALL">All statuses</SelectItem>
                 <SelectItem value="ASSIGNED">Assigned</SelectItem>
                 <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
                 <SelectItem value="COMPLETED">Completed</SelectItem>
@@ -100,15 +106,15 @@ export const CaseFilters: React.FC<CaseFiltersProps> = ({
           <div className="space-y-2">
             <Label>Priority</Label>
             <Select
-              value={filters.priority?.toString() || ''}
-              onValueChange={(value) => handleFilterChange('priority', value ? parseInt(value) : undefined)}
+              value={filters.priority?.toString() || 'ALL'}
+              onValueChange={(value) => handleFilterChange('priority', value === 'ALL' ? undefined : parseInt(value))}
               disabled={isLoading}
             >
               <SelectTrigger>
                 <SelectValue placeholder="All priorities" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All priorities</SelectItem>
+                <SelectItem value="ALL">All priorities</SelectItem>
                 <SelectItem value="1">Low</SelectItem>
                 <SelectItem value="2">Medium</SelectItem>
                 <SelectItem value="3">High</SelectItem>
@@ -121,15 +127,15 @@ export const CaseFilters: React.FC<CaseFiltersProps> = ({
           <div className="space-y-2">
             <Label>Client</Label>
             <Select
-              value={filters.clientId || ''}
-              onValueChange={(value) => handleFilterChange('clientId', value)}
+              value={filters.clientId || 'ALL'}
+              onValueChange={(value) => handleFilterChange('clientId', value === 'ALL' ? undefined : value)}
               disabled={isLoading}
             >
               <SelectTrigger>
                 <SelectValue placeholder="All clients" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All clients</SelectItem>
+                <SelectItem value="ALL">All clients</SelectItem>
                 {/* TODO: Load clients from API */}
                 <SelectItem value="client1">Client 1</SelectItem>
                 <SelectItem value="client2">Client 2</SelectItem>

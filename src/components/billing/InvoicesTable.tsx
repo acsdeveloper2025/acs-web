@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import { billingService } from '@/services/billing';
 import { Invoice } from '@/types/billing';
 import { InvoiceDetailsDialog } from './InvoiceDetailsDialog';

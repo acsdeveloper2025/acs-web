@@ -89,6 +89,7 @@
 /* Base styles */
 * {
   border-color: var(--color-border);
+  box-sizing: border-box;
 }
 
 body {
@@ -96,6 +97,35 @@ body {
   color: var(--color-foreground);
   font-family: system-ui, -apple-system, sans-serif;
   line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Layout improvements */
+.layout-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  overflow-x: hidden;
+}
+
+/* Responsive grid improvements */
+.responsive-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+@media (max-width: 640px) {
+  .responsive-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 }
 
 /* Custom component styles */
@@ -193,4 +223,71 @@ body {
   to {
     transform: translateX(0);
   }
+}
+
+/* Additional responsive utilities */
+.container-responsive {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-responsive {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-responsive {
+    padding: 0 2rem;
+  }
+}
+
+/* Improved mobile navigation */
+@media (max-width: 1023px) {
+  .mobile-nav-open {
+    overflow: hidden;
+  }
+
+  .sidebar-mobile {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .sidebar-mobile.open {
+    transform: translateX(0);
+  }
+}
+
+/* Better spacing for mobile */
+@media (max-width: 640px) {
+  .mobile-spacing {
+    padding: 1rem;
+  }
+
+  .mobile-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+/* Ensure proper stacking */
+.header-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.sidebar-fixed {
+  position: fixed;
+  z-index: 50;
+}
+
+.overlay-mobile {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background-color: rgba(0, 0, 0, 0.5);
 }
