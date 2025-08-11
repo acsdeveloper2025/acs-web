@@ -3,8 +3,11 @@ import { Role } from './auth';
 export interface User {
   id: string;
   name: string;
+  firstName?: string;
+  lastName?: string;
   username: string;
   email: string;
+  phone?: string;
   role: Role;
   employeeId: string;
   designation: string;
@@ -174,4 +177,14 @@ export interface UserExportData {
   createdAt: string;
   totalCases: number;
   completedCases: number;
+}
+
+export interface ActivityQuery {
+  page?: number;
+  limit?: number;
+  search?: string;
+  userId?: string;
+  actionType?: string;
+  dateFrom?: string;
+  dateTo?: string;
 }

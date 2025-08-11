@@ -86,7 +86,7 @@ export function useResponsive(customBreakpoints?: Partial<BreakpointValues>) {
   const isPortrait = windowSize.height > windowSize.width;
 
   // Responsive value selector
-  const getResponsiveValue = <T>(values: Partial<Record<Breakpoint, T>>, fallback: T): T => {
+  const getResponsiveValue = <T,>(values: Partial<Record<Breakpoint, T>>, fallback: T): T => {
     const breakpointOrder: Breakpoint[] = ['2xl', 'xl', 'lg', 'md', 'sm', 'xs'];
     const currentIndex = breakpointOrder.indexOf(currentBreakpoint);
     

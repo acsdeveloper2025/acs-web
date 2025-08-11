@@ -24,6 +24,9 @@ export interface Case {
   assignedToId: string;
   clientId: string;
   verificationTypeId?: string;
+  createdAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
   assignedTo: {
     id: string;
     name: string;

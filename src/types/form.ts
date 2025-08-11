@@ -1,53 +1,59 @@
 // Form Types and Enums
-export enum FormType {
+export const FormType = {
   // Residence Forms
-  RESIDENCE_POSITIVE = 'residence-positive',
-  RESIDENCE_SHIFTED = 'residence-shifted',
-  RESIDENCE_NSP = 'residence-nsp',
-  RESIDENCE_ENTRY_RESTRICTED = 'residence-entry-restricted',
-  RESIDENCE_UNTRACEABLE = 'residence-untraceable',
+  RESIDENCE_POSITIVE: 'residence-positive',
+  RESIDENCE_SHIFTED: 'residence-shifted',
+  RESIDENCE_NSP: 'residence-nsp',
+  RESIDENCE_ENTRY_RESTRICTED: 'residence-entry-restricted',
+  RESIDENCE_UNTRACEABLE: 'residence-untraceable',
 
   // Office Forms
-  OFFICE_POSITIVE = 'office-positive',
-  OFFICE_SHIFTED = 'office-shifted',
-  OFFICE_NSP = 'office-nsp',
-  OFFICE_ENTRY_RESTRICTED = 'office-entry-restricted',
-  OFFICE_UNTRACEABLE = 'office-untraceable',
+  OFFICE_POSITIVE: 'office-positive',
+  OFFICE_SHIFTED: 'office-shifted',
+  OFFICE_NSP: 'office-nsp',
+  OFFICE_ENTRY_RESTRICTED: 'office-entry-restricted',
+  OFFICE_UNTRACEABLE: 'office-untraceable',
 
   // Business Forms
-  BUSINESS_POSITIVE = 'business-positive',
-  BUSINESS_SHIFTED = 'business-shifted',
-  BUSINESS_NSP = 'business-nsp',
-  BUSINESS_ENTRY_RESTRICTED = 'business-entry-restricted',
-  BUSINESS_UNTRACEABLE = 'business-untraceable',
+  BUSINESS_POSITIVE: 'business-positive',
+  BUSINESS_SHIFTED: 'business-shifted',
+  BUSINESS_NSP: 'business-nsp',
+  BUSINESS_ENTRY_RESTRICTED: 'business-entry-restricted',
+  BUSINESS_UNTRACEABLE: 'business-untraceable',
 
   // Residence-cum-Office Forms
-  RESIDENCE_CUM_OFFICE_POSITIVE = 'residence-cum-office-positive',
-  RESIDENCE_CUM_OFFICE_SHIFTED = 'residence-cum-office-shifted',
-  RESIDENCE_CUM_OFFICE_NSP = 'residence-cum-office-nsp',
-  RESIDENCE_CUM_OFFICE_ENTRY_RESTRICTED = 'residence-cum-office-entry-restricted',
-  RESIDENCE_CUM_OFFICE_UNTRACEABLE = 'residence-cum-office-untraceable',
-}
+  RESIDENCE_CUM_OFFICE_POSITIVE: 'residence-cum-office-positive',
+  RESIDENCE_CUM_OFFICE_SHIFTED: 'residence-cum-office-shifted',
+  RESIDENCE_CUM_OFFICE_NSP: 'residence-cum-office-nsp',
+  RESIDENCE_CUM_OFFICE_ENTRY_RESTRICTED: 'residence-cum-office-entry-restricted',
+  RESIDENCE_CUM_OFFICE_UNTRACEABLE: 'residence-cum-office-untraceable',
+} as const;
 
-export enum VerificationType {
-  RESIDENCE = 'Residence',
-  OFFICE = 'Office',
-  BUSINESS = 'Business',
-  RESIDENCE_CUM_OFFICE = 'Residence-cum-office',
-  BUILDER = 'Builder',
-  NOC = 'NOC',
-  CONNECTOR = 'DSA/DST & Connector',
-  PROPERTY_APF = 'Property (APF)',
-  PROPERTY_INDIVIDUAL = 'Property (Individual)',
-}
+export type FormType = typeof FormType[keyof typeof FormType];
 
-export enum VerificationOutcome {
-  POSITIVE = 'Positive',
-  SHIFTED = 'Shifted',
-  NSP = 'NSP',
-  ENTRY_RESTRICTED = 'Entry Restricted',
-  UNTRACEABLE = 'Untraceable',
-}
+export const VerificationType = {
+  RESIDENCE: 'Residence',
+  OFFICE: 'Office',
+  BUSINESS: 'Business',
+  RESIDENCE_CUM_OFFICE: 'Residence-cum-office',
+  BUILDER: 'Builder',
+  NOC: 'NOC',
+  CONNECTOR: 'DSA/DST & Connector',
+  PROPERTY_APF: 'Property (APF)',
+  PROPERTY_INDIVIDUAL: 'Property (Individual)',
+} as const;
+
+export type VerificationType = typeof VerificationType[keyof typeof VerificationType];
+
+export const VerificationOutcome = {
+  POSITIVE: 'Positive',
+  SHIFTED: 'Shifted',
+  NSP: 'NSP',
+  ENTRY_RESTRICTED: 'Entry Restricted',
+  UNTRACEABLE: 'Untraceable',
+} as const;
+
+export type VerificationOutcome = typeof VerificationOutcome[keyof typeof VerificationOutcome];
 
 // Common Form Field Types
 export interface FormField {

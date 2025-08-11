@@ -66,7 +66,7 @@ export function RolePermissionsTable({ data, isLoading }: RolePermissionsTablePr
   };
 
   // Group permissions by module
-  const groupPermissionsByModule = (permissions: any[]) => {
+  const groupPermissionsByModule = (permissions: any[]): Record<string, any[]> => {
     return permissions.reduce((acc, permission) => {
       if (!acc[permission.module]) {
         acc[permission.module] = [];

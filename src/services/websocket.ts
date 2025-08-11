@@ -119,7 +119,7 @@ class WebSocketService {
     this.socket.on(event, handler);
   }
 
-  off(event: WebSocketEventType, handler?: Function): void {
+  off(event: WebSocketEventType, handler?: (...args: any[]) => void): void {
     if (!this.socket) return;
     if (handler) {
       this.socket.off(event, handler);
@@ -182,9 +182,9 @@ class WebSocketService {
               this.state.isConnecting ? 'connecting' : 
               this.state.error ? 'error' : 'disconnected',
       latency: this.latency,
-      lastPing: this.state.lastConnected,
+      lastPing: this.state.lastConnected || undefined,
       reconnectAttempts: this.state.reconnectAttempts,
-      error: this.state.error,
+      error: this.state.error || undefined,
     };
   }
 
@@ -217,22 +217,42 @@ class WebSocketService {
     });
 
     // Case events
-    this.socket.on('case:updated', this.eventHandlers.onCaseUpdated);
-    this.socket.on('case:status:updated', this.eventHandlers.onCaseStatusUpdated);
-    this.socket.on('case:typing:update', this.eventHandlers.onCaseTypingUpdate);
-    this.socket.on('location:updated', this.eventHandlers.onLocationUpdated);
+    if (this.eventHandlers.onCaseUpdated) {
+      this.socket.on('case:updated', this.eventHandlers.onCaseUpdated);
+    }
+    if (this.eventHandlers.onCaseStatusUpdated) {
+      this.socket.on('case:status:updated', this.eventHandlers.onCaseStatusUpdated);
+    }
+    if (this.eventHandlers.onCaseTypingUpdate) {
+      this.socket.on('case:typing:update', this.eventHandlers.onCaseTypingUpdate);
+    }
+    if (this.eventHandlers.onLocationUpdated) {
+      this.socket.on('location:updated', this.eventHandlers.onLocationUpdated);
+    }
 
     // Notification events
-    this.socket.on('notification', this.eventHandlers.onNotification);
-    this.socket.on('broadcast', this.eventHandlers.onBroadcast);
+    if (this.eventHandlers.onNotification) {
+      this.socket.on('notification', this.eventHandlers.onNotification);
+    }
+    if (this.eventHandlers.onBroadcast) {
+      this.socket.on('broadcast', this.eventHandlers.onBroadcast);
+    }
 
     // User activity events
-    this.socket.on('user:activity', this.eventHandlers.onUserActivity);
+    if (this.eventHandlers.onUserActivity) {
+      this.socket.on('user:activity', this.eventHandlers.onUserActivity);
+    }
 
     // Mobile events
-    this.socket.on('mobile:location:update', this.eventHandlers.onMobileLocationUpdate);
-    this.socket.on('mobile:form:progress', this.eventHandlers.onMobileFormProgress);
-    this.socket.on('mobile:photo:update', this.eventHandlers.onMobilePhotoUpdate);
+    if (this.eventHandlers.onMobileLocationUpdate) {
+      this.socket.on('mobile:location:update', this.eventHandlers.onMobileLocationUpdate);
+    }
+    if (this.eventHandlers.onMobileFormProgress) {
+      this.socket.on('mobile:form:progress', this.eventHandlers.onMobileFormProgress);
+    }
+    if (this.eventHandlers.onMobilePhotoUpdate) {
+      this.socket.on('mobile:photo:update', this.eventHandlers.onMobilePhotoUpdate);
+    }
 
     // Ping/pong for latency measurement
     this.socket.on('pong', (startTime: number) => {

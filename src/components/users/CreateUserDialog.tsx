@@ -39,7 +39,7 @@ const createUserSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
   role: z.enum(['ADMIN', 'BACKEND', 'BANK', 'FIELD'] as const, {
-    required_error: 'Role is required',
+    message: 'Role is required',
   }),
   employeeId: z.string().min(1, 'Employee ID is required'),
   designation: z.string().min(1, 'Designation is required'),

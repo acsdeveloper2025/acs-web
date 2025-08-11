@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuHeader,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
@@ -64,7 +63,7 @@ export function NotificationCenter() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80">
-        <DropdownMenuHeader className="flex items-center justify-between p-4">
+        <div className="flex items-center justify-between p-4">
           <h3 className="font-semibold">Notifications</h3>
           <div className="flex items-center space-x-2">
             {unreadCount > 0 && (
@@ -90,7 +89,7 @@ export function NotificationCenter() {
               </Button>
             )}
           </div>
-        </DropdownMenuHeader>
+        </div>
         
         <Separator />
         

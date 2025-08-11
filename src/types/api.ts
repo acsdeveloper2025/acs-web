@@ -19,6 +19,7 @@ export interface PaginationQuery {
   limit?: number;
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
+  search?: string;
 }
 
 export interface CaseListQuery extends PaginationQuery {

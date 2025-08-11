@@ -1,5 +1,6 @@
 import React from 'react';
 import { Menu, Bell, Moon, Sun, LogOut, User, Settings } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { NotificationCenter } from '@/components/realtime/NotificationCenter';
@@ -22,6 +23,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const location = useLocation();
 
   const handleLogout = async () => {
     await logout();
@@ -36,8 +38,25 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
       .slice(0, 2);
   };
 
+  const getPageTitle = () => {
+    const path = location.pathname;
+    if (path === '/dashboard') return 'Dashboard';
+    if (path === '/cases') return 'Cases';
+    if (path === '/cases/pending') return 'Pending Review';
+    if (path === '/clients') return 'Clients';
+    if (path === '/users') return 'Users';
+    if (path === '/reports') return 'Reports';
+    if (path === '/billing') return 'Billing';
+    if (path === '/locations') return 'Locations';
+    if (path === '/realtime') return 'Real-time';
+    if (path === '/forms') return 'Forms';
+    if (path === '/security-ux') return 'Security & UX';
+    if (path === '/settings') return 'Settings';
+    return 'Dashboard';
+  };
+
   return (
-    <header className="bg-white shadow-sm border-b lg:pl-64">
+    <header className="bg-card shadow-sm border-b border-border lg:pl-64 backdrop-blur-sm">
       <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
         {/* Mobile menu button */}
         <Button
@@ -49,9 +68,9 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
           <Menu className="h-6 w-6" />
         </Button>
 
-        {/* Page title - can be dynamic */}
+        {/* Page title - dynamic based on route */}
         <div className="flex-1 lg:flex-none">
-          <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
+          <h1 className="text-2xl font-semibold text-foreground">{getPageTitle()}</h1>
         </div>
 
         {/* Right side actions */}

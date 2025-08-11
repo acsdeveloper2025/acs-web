@@ -43,11 +43,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       <div key={item.id}>
         <div
           className={cn(
-            'flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors',
+            'flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200',
             level > 0 && 'ml-4',
             isActive
-              ? 'bg-primary text-primary-foreground'
-              : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+              ? 'bg-primary text-primary-foreground shadow-sm'
+              : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground hover:shadow-sm'
           )}
         >
           {hasChildren ? (
@@ -97,14 +97,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       {/* Sidebar */}
       <div
         className={cn(
-          'fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0',
-          isOpen ? 'translate-x-0' : '-translate-x-full'
+          'fixed inset-y-0 left-0 z-50 w-64 bg-card shadow-lg border-r border-border transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 animate-slide-in',
+          isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-center h-16 px-4 border-b">
-            <h1 className="text-xl font-bold text-gray-900">CRM Admin</h1>
+          <div className="flex items-center justify-center h-16 px-4 border-b border-border bg-primary/5">
+            <h1 className="text-xl font-bold text-foreground">CRM Admin</h1>
           </div>
 
           {/* Navigation */}

@@ -22,7 +22,7 @@ import { CreateBankBillDialog } from '@/components/reports/CreateBankBillDialog'
 import { GenerateReportDialog } from '@/components/reports/GenerateReportDialog';
 import { TurnaroundTimeChart } from '@/components/reports/TurnaroundTimeChart';
 import { CompletionRateChart } from '@/components/reports/CompletionRateChart';
-import { addDays, format } from 'date-fns';
+import { addDays, format as formatDate } from 'date-fns';
 
 export function ReportsPage() {
   const [activeTab, setActiveTab] = useState('overview');
@@ -43,8 +43,8 @@ export function ReportsPage() {
       search: searchQuery,
       status: selectedStatus || undefined,
       clientId: selectedClient || undefined,
-      dateFrom: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
-      dateTo: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
+      dateFrom: dateRange.from ? formatDate(dateRange.from, 'yyyy-MM-dd') : undefined,
+      dateTo: dateRange.to ? formatDate(dateRange.to, 'yyyy-MM-dd') : undefined,
     }),
     enabled: activeTab === 'bank-bills',
   });
@@ -54,8 +54,8 @@ export function ReportsPage() {
     queryKey: ['mis-reports', searchQuery, dateRange],
     queryFn: () => reportsService.getMISReports({
       search: searchQuery,
-      dateFrom: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
-      dateTo: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
+      dateFrom: dateRange.from ? formatDate(dateRange.from, 'yyyy-MM-dd') : undefined,
+      dateTo: dateRange.to ? formatDate(dateRange.to, 'yyyy-MM-dd') : undefined,
     }),
     enabled: activeTab === 'mis-reports',
   });
@@ -71,8 +71,8 @@ export function ReportsPage() {
   const { data: dashboardData } = useQuery({
     queryKey: ['reports-dashboard', dateRange],
     queryFn: () => reportsService.getReportsDashboardData({
-      dateFrom: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
-      dateTo: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
+      dateFrom: dateRange.from ? formatDate(dateRange.from, 'yyyy-MM-dd') : undefined,
+      dateTo: dateRange.to ? formatDate(dateRange.to, 'yyyy-MM-dd') : undefined,
     }),
     enabled: activeTab === 'overview',
   });
@@ -81,8 +81,8 @@ export function ReportsPage() {
   const { data: turnaroundData } = useQuery({
     queryKey: ['turnaround-time', dateRange],
     queryFn: () => reportsService.getTurnaroundTimeReport({
-      dateFrom: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
-      dateTo: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
+      dateFrom: dateRange.from ? formatDate(dateRange.from, 'yyyy-MM-dd') : undefined,
+      dateTo: dateRange.to ? formatDate(dateRange.to, 'yyyy-MM-dd') : undefined,
     }),
     enabled: activeTab === 'analytics',
   });
@@ -91,8 +91,8 @@ export function ReportsPage() {
   const { data: completionData } = useQuery({
     queryKey: ['completion-rate', dateRange],
     queryFn: () => reportsService.getCompletionRateReport({
-      dateFrom: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
-      dateTo: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
+      dateFrom: dateRange.from ? formatDate(dateRange.from, 'yyyy-MM-dd') : undefined,
+      dateTo: dateRange.to ? formatDate(dateRange.to, 'yyyy-MM-dd') : undefined,
     }),
     enabled: activeTab === 'analytics',
   });
@@ -107,17 +107,17 @@ export function ReportsPage() {
           search: searchQuery,
           status: selectedStatus || undefined,
           clientId: selectedClient || undefined,
-          dateFrom: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
-          dateTo: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
+          dateFrom: dateRange.from ? formatDate(dateRange.from, 'yyyy-MM-dd') : undefined,
+          dateTo: dateRange.to ? formatDate(dateRange.to, 'yyyy-MM-dd') : undefined,
         }, format);
-        filename = `bank_bills_${format.toLowerCase()}_${format(new Date(), 'yyyy-MM-dd')}.${format === 'EXCEL' ? 'xlsx' : format.toLowerCase()}`;
+        filename = `bank_bills_${format.toLowerCase()}_${formatDate(new Date(), 'yyyy-MM-dd')}.${format === 'EXCEL' ? 'xlsx' : format.toLowerCase()}`;
       } else {
         blob = await reportsService.exportMISReports({
           search: searchQuery,
-          dateFrom: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
-          dateTo: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
+          dateFrom: dateRange.from ? formatDate(dateRange.from, 'yyyy-MM-dd') : undefined,
+          dateTo: dateRange.to ? formatDate(dateRange.to, 'yyyy-MM-dd') : undefined,
         }, format);
-        filename = `mis_reports_${format.toLowerCase()}_${format(new Date(), 'yyyy-MM-dd')}.${format === 'EXCEL' ? 'xlsx' : format.toLowerCase()}`;
+        filename = `mis_reports_${format.toLowerCase()}_${formatDate(new Date(), 'yyyy-MM-dd')}.${format === 'EXCEL' ? 'xlsx' : format.toLowerCase()}`;
       }
 
       const url = window.URL.createObjectURL(blob);

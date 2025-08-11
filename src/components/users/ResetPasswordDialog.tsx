@@ -30,7 +30,7 @@ export function ResetPasswordDialog({ user, open, onOpenChange }: ResetPasswordD
       queryClient.invalidateQueries({ queryKey: ['users'] });
       toast.success('Temporary password generated successfully');
       // In a real app, you might want to show the password or send it via email
-      console.log('Temporary password:', data.data.temporaryPassword);
+      console.log('Temporary password:', data.data?.temporaryPassword);
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || 'Failed to generate temporary password');

@@ -110,7 +110,7 @@ export interface MobilePhotoUpdate {
 }
 
 // WebSocket event types
-export type WebSocketEventType = 
+export type WebSocketEventType =
   | 'connected'
   | 'disconnected'
   | 'error'
@@ -125,7 +125,8 @@ export type WebSocketEventType =
   | 'mobile:form:progress'
   | 'mobile:photo:update'
   | 'mobile:sync:start'
-  | 'mobile:sync:trigger';
+  | 'mobile:sync:trigger'
+  | 'stats:update';
 
 // WebSocket event handlers
 export interface WebSocketEventHandlers {

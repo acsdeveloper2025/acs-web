@@ -67,7 +67,7 @@ export function renderWithProviders(
         <ThemeProvider defaultTheme="light">
           <QueryClientProvider client={queryClient}>
             <BrowserRouter>
-              <AuthProvider value={authContext}>
+              <AuthProvider>
                 {children}
               </AuthProvider>
             </BrowserRouter>

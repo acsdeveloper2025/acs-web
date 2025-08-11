@@ -5,16 +5,22 @@ export interface Invoice {
   amount: number;
   taxAmount: number;
   totalAmount: number;
+  subtotalAmount?: number;
+  taxPercentage?: number;
   status: 'DRAFT' | 'SENT' | 'PAID' | 'OVERDUE' | 'CANCELLED';
   issueDate: string;
   dueDate: string;
   paidDate?: string;
+  paidAt?: string;
+  notes?: string;
   createdAt: string;
   updatedAt: string;
   client: {
     id: string;
     name: string;
     code: string;
+    email?: string;
+    phone?: string;
   };
   items: InvoiceItem[];
 }
@@ -26,7 +32,13 @@ export interface InvoiceItem {
   quantity: number;
   unitPrice: number;
   amount: number;
+  totalPrice?: number;
   caseId?: string;
+  case?: {
+    id: string;
+    title: string;
+    customerName: string;
+  };
 }
 
 export interface Commission {
@@ -76,6 +88,26 @@ export interface CreateInvoiceData {
     caseId?: string;
   }[];
   dueDate: string;
+}
+
+export interface InvoiceQuery {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: string;
+  clientId?: string;
+  dateFrom?: string;
+  dateTo?: string;
+}
+
+export interface CommissionQuery {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: string;
+  agentId?: string;
+  dateFrom?: string;
+  dateTo?: string;
 }
 
 export interface UpdateInvoiceData {

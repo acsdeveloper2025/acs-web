@@ -23,7 +23,7 @@ export class SecurityUtils {
 
   // SQL Injection Protection (for display purposes)
   static sanitizeSqlInput(input: string): string {
-    return input.replace(/[';--]/g, '');
+    return input.replace(/[';-]/g, '');
   }
 
   // URL validation

@@ -30,13 +30,10 @@ export function BulkImportDialog({ open, onOpenChange, type }: BulkImportDialogP
 
   const importMutation = useMutation({
     mutationFn: async (file: File) => {
-      const formData = new FormData();
-      formData.append('file', file);
-      
       if (type === 'clients') {
-        return clientsService.bulkImportClients(formData);
+        return clientsService.bulkImportClients(file);
       } else {
-        return clientsService.bulkImportProducts(formData);
+        return clientsService.bulkImportProducts(file);
       }
     },
     onSuccess: (response) => {

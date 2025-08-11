@@ -10,7 +10,7 @@ import {
   CheckSquare,
   Settings,
   Wifi,
-  FileText
+  Shield
 } from 'lucide-react';
 
 export interface NavigationItem {

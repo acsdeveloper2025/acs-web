@@ -225,3 +225,22 @@ export interface GenerateReportData {
   filters: ReportFilters;
   format?: 'PDF' | 'EXCEL' | 'CSV';
 }
+
+export interface BankBillQuery {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: string;
+  clientId?: string;
+  dateFrom?: string;
+  dateTo?: string;
+}
+
+export interface ReportQuery {
+  page?: number;
+  limit?: number;
+  search?: string;
+  reportType?: string;
+  dateFrom?: string;
+  dateTo?: string;
+}
