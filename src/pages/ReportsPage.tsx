@@ -27,8 +27,8 @@ import { addDays, format as formatDate } from 'date-fns';
 export function ReportsPage() {
   const [activeTab, setActiveTab] = useState('overview');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState<string>('');
-  const [selectedClient, setSelectedClient] = useState<string>('');
+  const [selectedStatus, setSelectedStatus] = useState<string>('all');
+  const [selectedClient, setSelectedClient] = useState<string>('all');
   const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
     from: addDays(new Date(), -30),
     to: new Date(),
@@ -41,8 +41,8 @@ export function ReportsPage() {
     queryKey: ['bank-bills', searchQuery, selectedStatus, selectedClient, dateRange],
     queryFn: () => reportsService.getBankBills({
       search: searchQuery,
-      status: selectedStatus || undefined,
-      clientId: selectedClient || undefined,
+      status: selectedStatus !== 'all' ? selectedStatus : undefined,
+      clientId: selectedClient !== 'all' ? selectedClient : undefined,
       dateFrom: dateRange.from ? formatDate(dateRange.from, 'yyyy-MM-dd') : undefined,
       dateTo: dateRange.to ? formatDate(dateRange.to, 'yyyy-MM-dd') : undefined,
     }),
@@ -133,8 +133,8 @@ export function ReportsPage() {
 
   const clearFilters = () => {
     setSearchQuery('');
-    setSelectedStatus('');
-    setSelectedClient('');
+    setSelectedStatus('all');
+    setSelectedClient('all');
     setDateRange({
       from: addDays(new Date(), -30),
       to: new Date(),
@@ -280,7 +280,7 @@ export function ReportsPage() {
                       <SelectValue placeholder="Filter by status" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Status</SelectItem>
+                      <SelectItem value="all">All Status</SelectItem>
                       <SelectItem value="PENDING">Pending</SelectItem>
                       <SelectItem value="PARTIALLY_PAID">Partially Paid</SelectItem>
                       <SelectItem value="PAID">Paid</SelectItem>
@@ -294,7 +294,7 @@ export function ReportsPage() {
                   onDateChange={setDateRange}
                 />
 
-                {(searchQuery || selectedStatus || selectedClient) && (
+                {(searchQuery || selectedStatus !== 'all' || selectedClient !== 'all') && (
                   <Button variant="outline" size="sm" onClick={clearFilters}>
                     Clear Filters
                   </Button>

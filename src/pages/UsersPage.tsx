@@ -26,9 +26,9 @@ import type { Role } from '@/types/auth';
 export function UsersPage() {
   const [activeTab, setActiveTab] = useState('users');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedRole, setSelectedRole] = useState<string>('');
-  const [selectedDepartment, setSelectedDepartment] = useState<string>('');
-  const [selectedStatus, setSelectedStatus] = useState<string>('');
+  const [selectedRole, setSelectedRole] = useState<string>('all');
+  const [selectedDepartment, setSelectedDepartment] = useState<string>('all');
+  const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [showCreateUser, setShowCreateUser] = useState(false);
   const [showBulkImport, setShowBulkImport] = useState(false);
 
@@ -37,8 +37,8 @@ export function UsersPage() {
     queryKey: ['users', searchQuery, selectedRole, selectedDepartment, selectedStatus],
     queryFn: () => usersService.getUsers({
       search: searchQuery,
-      role: selectedRole as Role || undefined,
-      department: selectedDepartment || undefined,
+      role: selectedRole !== 'all' ? selectedRole as Role : undefined,
+      department: selectedDepartment !== 'all' ? selectedDepartment : undefined,
       isActive: selectedStatus === 'active' ? true : selectedStatus === 'inactive' ? false : undefined,
     }),
     enabled: activeTab === 'users',
@@ -87,8 +87,8 @@ export function UsersPage() {
     try {
       const blob = await usersService.exportUsers({
         search: searchQuery,
-        role: selectedRole as Role || undefined,
-        department: selectedDepartment || undefined,
+        role: selectedRole !== 'all' ? selectedRole as Role : undefined,
+        department: selectedDepartment !== 'all' ? selectedDepartment : undefined,
         isActive: selectedStatus === 'active' ? true : selectedStatus === 'inactive' ? false : undefined,
       }, format);
 
@@ -105,39 +105,70 @@ export function UsersPage() {
 
   const clearFilters = () => {
     setSearchQuery('');
-    setSelectedRole('');
-    setSelectedDepartment('');
-    setSelectedStatus('');
+    setSelectedRole('all');
+    setSelectedDepartment('all');
+    setSelectedStatus('all');
   };
 
   const getTabStats = () => {
-    const users = usersData?.data || [];
-    const activities = activitiesData?.data || [];
-    const sessions = sessionsData?.data || [];
-    
-    return {
-      users: {
-        total: users.length,
-        active: users.filter(user => user.isActive).length,
-        inactive: users.filter(user => !user.isActive).length,
-      },
-      activities: {
-        total: activities.length,
-        today: activities.filter(activity => {
-          const activityDate = new Date(activity.timestamp);
-          const today = new Date();
-          return activityDate.toDateString() === today.toDateString();
-        }).length,
-      },
-      sessions: {
-        total: sessions.length,
-        active: sessions.filter(session => session.isActive).length,
-      }
-    };
+    try {
+      const users = usersData?.data || [];
+      const activities = activitiesData?.data || [];
+      const sessions = sessionsData?.data || [];
+
+      // Ensure all arrays are properly defined
+      const safeUsers = Array.isArray(users) ? users : [];
+      const safeActivities = Array.isArray(activities) ? activities : [];
+      const safeSessions = Array.isArray(sessions) ? sessions : [];
+
+      return {
+        users: {
+          total: safeUsers.length,
+          active: safeUsers.filter(user => user?.isActive).length,
+          inactive: safeUsers.filter(user => !user?.isActive).length,
+        },
+        activities: {
+          total: safeActivities.length,
+          today: safeActivities.filter(activity => {
+            if (!activity?.timestamp) return false;
+            try {
+              const activityDate = new Date(activity.timestamp);
+              const today = new Date();
+              return activityDate.toDateString() === today.toDateString();
+            } catch {
+              return false;
+            }
+          }).length,
+        },
+        sessions: {
+          total: safeSessions.length,
+          active: safeSessions.filter(session => session?.isActive).length,
+        }
+      };
+    } catch (error) {
+      console.error('Error calculating tab stats:', error);
+      return {
+        users: { total: 0, active: 0, inactive: 0 },
+        activities: { total: 0, today: 0 },
+        sessions: { total: 0, active: 0 }
+      };
+    }
   };
 
+  // Early return if critical data is still loading to prevent undefined errors
+  if (usersLoading && !usersData) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-2 text-sm text-muted-foreground">Loading users...</p>
+        </div>
+      </div>
+    );
+  }
+
   const stats = getTabStats();
-  const departments = departmentsData?.data || [];
+  const departments = Array.isArray(departmentsData?.data) ? departmentsData.data : [];
 
   return (
     <div className="space-y-6">
@@ -253,7 +284,7 @@ export function UsersPage() {
                         <SelectValue placeholder="Filter by role" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All Roles</SelectItem>
+                        <SelectItem value="all">All Roles</SelectItem>
                         <SelectItem value="ADMIN">Admin</SelectItem>
                         <SelectItem value="BACKEND">Backend</SelectItem>
                         <SelectItem value="BANK">Bank</SelectItem>
@@ -266,7 +297,7 @@ export function UsersPage() {
                         <SelectValue placeholder="Filter by department" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All Departments</SelectItem>
+                        <SelectItem value="all">All Departments</SelectItem>
                         {departments.map((dept) => (
                           <SelectItem key={dept} value={dept}>
                             {dept}
@@ -280,7 +311,7 @@ export function UsersPage() {
                         <SelectValue placeholder="Filter by status" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All Status</SelectItem>
+                        <SelectItem value="all">All Status</SelectItem>
                         <SelectItem value="active">Active</SelectItem>
                         <SelectItem value="inactive">Inactive</SelectItem>
                       </SelectContent>
@@ -288,7 +319,7 @@ export function UsersPage() {
                   </>
                 )}
 
-                {(searchQuery || selectedRole || selectedDepartment || selectedStatus) && (
+                {(searchQuery || selectedRole !== 'all' || selectedDepartment !== 'all' || selectedStatus !== 'all') && (
                   <Button variant="outline" size="sm" onClick={clearFilters}>
                     Clear Filters
                   </Button>
@@ -298,28 +329,28 @@ export function UsersPage() {
 
             <TabsContent value="users" className="space-y-4">
               <UsersTable
-                data={usersData?.data || []}
+                data={Array.isArray(usersData?.data) ? usersData.data : []}
                 isLoading={usersLoading}
               />
             </TabsContent>
 
             <TabsContent value="activities" className="space-y-4">
               <UserActivitiesTable
-                data={activitiesData?.data || []}
+                data={Array.isArray(activitiesData?.data) ? activitiesData.data : []}
                 isLoading={activitiesLoading}
               />
             </TabsContent>
 
             <TabsContent value="sessions" className="space-y-4">
               <UserSessionsTable
-                data={sessionsData?.data || []}
+                data={Array.isArray(sessionsData?.data) ? sessionsData.data : []}
                 isLoading={sessionsLoading}
               />
             </TabsContent>
 
             <TabsContent value="permissions" className="space-y-4">
               <RolePermissionsTable
-                data={rolePermissionsData?.data || []}
+                data={Array.isArray(rolePermissionsData?.data) ? rolePermissionsData.data : []}
                 isLoading={rolePermissionsLoading}
               />
             </TabsContent>

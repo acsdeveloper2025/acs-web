@@ -23,8 +23,8 @@ import { BulkImportLocationDialog } from '@/components/locations/BulkImportLocat
 export function LocationsPage() {
   const [activeTab, setActiveTab] = useState('cities');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedState, setSelectedState] = useState<string>('');
-  const [selectedCountry, setSelectedCountry] = useState<string>('');
+  const [selectedState, setSelectedState] = useState<string>('all');
+  const [selectedCountry, setSelectedCountry] = useState<string>('all');
   const [showCreateCity, setShowCreateCity] = useState(false);
   const [showCreatePincode, setShowCreatePincode] = useState(false);
   const [showBulkImport, setShowBulkImport] = useState(false);
@@ -33,10 +33,10 @@ export function LocationsPage() {
   // Fetch data based on active tab and filters
   const { data: citiesData, isLoading: citiesLoading } = useQuery({
     queryKey: ['cities', searchQuery, selectedState, selectedCountry],
-    queryFn: () => locationsService.getCities({ 
+    queryFn: () => locationsService.getCities({
       search: searchQuery,
-      state: selectedState || undefined,
-      country: selectedCountry || undefined,
+      state: selectedState !== 'all' ? selectedState : undefined,
+      country: selectedCountry !== 'all' ? selectedCountry : undefined,
     }),
     enabled: activeTab === 'cities',
   });
@@ -65,8 +65,8 @@ export function LocationsPage() {
 
   const clearFilters = () => {
     setSearchQuery('');
-    setSelectedState('');
-    setSelectedCountry('');
+    setSelectedState('all');
+    setSelectedCountry('all');
   };
 
   const getTabStats = () => {
@@ -217,7 +217,7 @@ export function LocationsPage() {
                       <SelectValue placeholder="Filter by state" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All States</SelectItem>
+                      <SelectItem value="all">All States</SelectItem>
                       {states.map((state) => (
                         <SelectItem key={state} value={state}>
                           {state}
@@ -231,7 +231,7 @@ export function LocationsPage() {
                       <SelectValue placeholder="Filter by country" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Countries</SelectItem>
+                      <SelectItem value="all">All Countries</SelectItem>
                       {countries.map((country) => (
                         <SelectItem key={country} value={country}>
                           {country}
@@ -242,7 +242,7 @@ export function LocationsPage() {
                 </>
               )}
 
-              {(searchQuery || selectedState || selectedCountry) && (
+              {(searchQuery || selectedState !== 'all' || selectedCountry !== 'all') && (
                 <Button variant="outline" size="sm" onClick={clearFilters}>
                   Clear Filters
                 </Button>

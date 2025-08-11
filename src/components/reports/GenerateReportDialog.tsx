@@ -67,8 +67,8 @@ export function GenerateReportDialog({ open, onOpenChange }: GenerateReportDialo
       title: '',
       description: '',
       format: 'PDF',
-      clientId: '',
-      userId: '',
+      clientId: 'all',
+      userId: 'all',
     },
   });
 
@@ -207,7 +207,7 @@ export function GenerateReportDialog({ open, onOpenChange }: GenerateReportDialo
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="">All Clients</SelectItem>
+                      <SelectItem value="all">All Clients</SelectItem>
                       {clients.map((client) => (
                         <SelectItem key={client.id} value={client.id}>
                           {client.name} ({client.code})

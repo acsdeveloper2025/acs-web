@@ -24,8 +24,8 @@ import { addDays, format } from 'date-fns';
 export function BillingPage() {
   const [activeTab, setActiveTab] = useState('invoices');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState<string>('');
-  const [selectedClient, setSelectedClient] = useState<string>('');
+  const [selectedStatus, setSelectedStatus] = useState<string>('all');
+  const [selectedClient, setSelectedClient] = useState<string>('all');
   const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
     from: addDays(new Date(), -30),
     to: new Date(),
@@ -37,8 +37,8 @@ export function BillingPage() {
     queryKey: ['invoices', searchQuery, selectedStatus, selectedClient, dateRange],
     queryFn: () => billingService.getInvoices({
       search: searchQuery,
-      status: selectedStatus || undefined,
-      clientId: selectedClient || undefined,
+      status: selectedStatus !== 'all' ? selectedStatus : undefined,
+      clientId: selectedClient !== 'all' ? selectedClient : undefined,
       dateFrom: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
       dateTo: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
     }),
@@ -50,8 +50,8 @@ export function BillingPage() {
     queryKey: ['commissions', searchQuery, selectedStatus, selectedClient, dateRange],
     queryFn: () => billingService.getCommissions({
       search: searchQuery,
-      status: selectedStatus || undefined,
-      clientId: selectedClient || undefined,
+      status: selectedStatus !== 'all' ? selectedStatus : undefined,
+      clientId: selectedClient !== 'all' ? selectedClient : undefined,
       dateFrom: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
       dateTo: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
     }),
@@ -102,8 +102,8 @@ export function BillingPage() {
 
   const clearFilters = () => {
     setSearchQuery('');
-    setSelectedStatus('');
-    setSelectedClient('');
+    setSelectedStatus('all');
+    setSelectedClient('all');
     setDateRange({
       from: addDays(new Date(), -30),
       to: new Date(),
@@ -273,7 +273,7 @@ export function BillingPage() {
                   <SelectValue placeholder="Filter by status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Status</SelectItem>
+                  <SelectItem value="all">All Status</SelectItem>
                   {activeTab === 'invoices' ? (
                     <>
                       <SelectItem value="DRAFT">Draft</SelectItem>
@@ -297,7 +297,7 @@ export function BillingPage() {
                 onDateChange={setDateRange}
               />
 
-              {(searchQuery || selectedStatus || selectedClient) && (
+              {(searchQuery || selectedStatus !== 'all' || selectedClient !== 'all') && (
                 <Button variant="outline" size="sm" onClick={clearFilters}>
                   Clear Filters
                 </Button>
