@@ -31,13 +31,16 @@ import {
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { locationsService } from '@/services/locations';
+import { AreaSelector } from './AreaSelector';
 
 const createPincodeSchema = z.object({
   code: z.string()
     .min(6, 'Pincode must be 6 digits')
     .max(6, 'Pincode must be 6 digits')
     .regex(/^\d{6}$/, 'Pincode must contain only numbers'),
-  area: z.string().min(1, 'Area name is required').max(100, 'Area name too long'),
+  areas: z.array(z.string().min(2, 'Area name must be at least 2 characters'))
+    .min(1, 'At least one area is required')
+    .max(15, 'Maximum 15 areas allowed'),
   cityId: z.string().min(1, 'City selection is required'),
 });
 
@@ -55,7 +58,7 @@ export function CreatePincodeDialog({ open, onOpenChange }: CreatePincodeDialogP
     resolver: zodResolver(createPincodeSchema),
     defaultValues: {
       code: '',
-      area: '',
+      areas: [],
       cityId: '',
     },
   });
@@ -82,7 +85,25 @@ export function CreatePincodeDialog({ open, onOpenChange }: CreatePincodeDialogP
   });
 
   const onSubmit = (data: CreatePincodeFormData) => {
-    createMutation.mutate(data);
+    // Find the selected city to get additional required fields
+    const selectedCity = cities.find(city => city.id === data.cityId);
+
+    if (!selectedCity) {
+      toast.error('Please select a valid city');
+      return;
+    }
+
+    // Prepare data with all required fields for backend
+    const pincodeData = {
+      code: data.code,
+      areas: data.areas,
+      cityId: data.cityId,
+      cityName: selectedCity.name,
+      state: selectedCity.state,
+      country: selectedCity.country,
+    };
+
+    createMutation.mutate(pincodeData);
   };
 
   const cities = citiesData?.data || [];
@@ -123,21 +144,15 @@ export function CreatePincodeDialog({ open, onOpenChange }: CreatePincodeDialogP
 
             <FormField
               control={form.control}
-              name="area"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Area Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Enter area name"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    The specific area or locality name
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
+              name="areas"
+              render={({ field, fieldState }) => (
+                <AreaSelector
+                  selectedAreas={field.value}
+                  onAreasChange={field.onChange}
+                  cityId={form.watch('cityId')}
+                  error={fieldState.error?.message}
+                  disabled={createMutation.isPending}
+                />
               )}
             />
 

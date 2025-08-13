@@ -16,6 +16,7 @@ export interface State {
   createdAt: string;
   updatedAt: string;
   cities?: City[];
+  city_count?: number;
 }
 
 export interface City {
@@ -26,13 +27,26 @@ export interface City {
   createdAt: string;
   updatedAt: string;
   pincodes?: Pincode[];
+  pincode_count?: number;
+}
+
+export interface PincodeArea {
+  id: string;
+  name: string;
+  displayOrder: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Pincode {
   id: string;
   code: string;
-  area: string;
+  area?: string; // Deprecated: kept for backward compatibility
+  areas: PincodeArea[];
   cityId: string;
+  cityName: string;
+  state: string;
+  country: string;
   createdAt: string;
   updatedAt: string;
   city?: City;
@@ -78,10 +92,30 @@ export interface CreatePincodeData {
   code: string;
   area: string;
   cityId: string;
+  cityName: string;
+  state: string;
+  country: string;
 }
 
 export interface UpdatePincodeData {
   code?: string;
   area?: string;
   cityId?: string;
+}
+
+export interface CreatePincodeAreaData {
+  name: string;
+  displayOrder?: number;
+}
+
+export interface UpdatePincodeAreaData {
+  name: string;
+  displayOrder?: number;
+}
+
+export interface ReorderPincodeAreasData {
+  areaOrders: {
+    id: string;
+    displayOrder: number;
+  }[];
 }

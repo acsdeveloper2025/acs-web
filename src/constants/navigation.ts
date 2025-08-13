@@ -134,6 +134,13 @@ export const navigationItems: NavigationItem[] = [
         icon: MapPin,
         roles: ['ADMIN'],
       },
+      {
+        id: 'areas',
+        label: 'Areas',
+        href: '/locations?tab=areas',
+        icon: MapPin,
+        roles: ['ADMIN'],
+      },
     ],
   },
   {

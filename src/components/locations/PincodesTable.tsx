@@ -112,7 +112,7 @@ export function PincodesTable({ data, isLoading }: PincodesTableProps) {
           <TableHeader>
             <TableRow>
               <TableHead>Pincode</TableHead>
-              <TableHead>Area</TableHead>
+              <TableHead>Areas</TableHead>
               <TableHead>City</TableHead>
               <TableHead>State</TableHead>
               <TableHead>Created Date</TableHead>
@@ -133,21 +133,38 @@ export function PincodesTable({ data, isLoading }: PincodesTableProps) {
                   </div>
                 </TableCell>
                 <TableCell>
-                  <span className="font-medium">{pincode.area}</span>
+                  <div className="flex flex-wrap gap-1">
+                    {pincode.areas && pincode.areas.length > 0 ? (
+                      pincode.areas
+                        .sort((a, b) => a.displayOrder - b.displayOrder)
+                        .map((area) => (
+                          <Badge key={area.id} variant="outline" className="text-xs">
+                            {area.name}
+                          </Badge>
+                        ))
+                    ) : (
+                      // Fallback for backward compatibility
+                      pincode.area && (
+                        <Badge variant="outline" className="text-xs">
+                          {pincode.area}
+                        </Badge>
+                      )
+                    )}
+                  </div>
                 </TableCell>
                 <TableCell>
-                  {pincode.city ? (
+                  {pincode.cityName ? (
                     <div className="flex items-center space-x-1">
                       <Building className="h-3 w-3 text-muted-foreground" />
-                      <span>{pincode.city.name}</span>
+                      <span>{pincode.cityName}</span>
                     </div>
                   ) : (
                     <span className="text-muted-foreground">No city</span>
                   )}
                 </TableCell>
                 <TableCell>
-                  {pincode.city ? (
-                    <Badge variant="outline">{pincode.city.state}</Badge>
+                  {pincode.state ? (
+                    <Badge variant="outline">{pincode.state}</Badge>
                   ) : (
                     <span className="text-muted-foreground">-</span>
                   )}
@@ -202,7 +219,8 @@ export function PincodesTable({ data, isLoading }: PincodesTableProps) {
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. This will permanently delete the pincode
-              "{pincodeToDelete?.code}" for area "{pincodeToDelete?.area}".
+              "{pincodeToDelete?.code}" for areas "{pincodeToDelete?.areas?.[0]?.name || pincodeToDelete?.area || 'Unknown'}"
+              {pincodeToDelete?.areas && pincodeToDelete.areas.length > 1 && ` and ${pincodeToDelete.areas.length - 1} other area(s)`}.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

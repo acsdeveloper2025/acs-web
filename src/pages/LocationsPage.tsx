@@ -19,10 +19,12 @@ import { CountriesTable } from '@/components/locations/CountriesTable';
 import { StatesTable } from '@/components/locations/StatesTable';
 import { CitiesTable } from '@/components/locations/CitiesTable';
 import { PincodesTable } from '@/components/locations/PincodesTable';
+import { AreasTable } from '@/components/locations/AreasTable';
 import { CreateCountryDialog } from '@/components/locations/CreateCountryDialog';
 import { CreateStateDialog } from '@/components/locations/CreateStateDialog';
 import { CreateCityDialog } from '@/components/locations/CreateCityDialog';
 import { CreatePincodeDialog } from '@/components/locations/CreatePincodeDialog';
+import { CreateAreaDialog } from '@/components/locations/CreateAreaDialog';
 import { BulkImportLocationDialog } from '@/components/locations/BulkImportLocationDialog';
 
 export function LocationsPage() {
@@ -35,6 +37,7 @@ export function LocationsPage() {
   const [showCreateState, setShowCreateState] = useState(false);
   const [showCreateCity, setShowCreateCity] = useState(false);
   const [showCreatePincode, setShowCreatePincode] = useState(false);
+  const [showCreateArea, setShowCreateArea] = useState(false);
   const [showBulkImport, setShowBulkImport] = useState(false);
   const [bulkImportType, setBulkImportType] = useState<'countries' | 'states' | 'cities' | 'pincodes'>('countries');
 
@@ -81,6 +84,16 @@ export function LocationsPage() {
     enabled: activeTab === 'pincodes',
   });
 
+  const { data: areasData, isLoading: areasLoading } = useQuery({
+    queryKey: ['areas', searchQuery, selectedState, selectedCountry],
+    queryFn: () => locationsService.getAreas({
+      search: searchQuery,
+      state: selectedState !== 'all' ? selectedState : undefined,
+      country: selectedCountry !== 'all' ? selectedCountry : undefined,
+    }),
+    enabled: activeTab === 'areas',
+  });
+
   // Fetch filter data
   const { data: stateNamesData } = useQuery({
     queryKey: ['state-names'],
@@ -110,6 +123,7 @@ export function LocationsPage() {
       states: statesData?.data?.length || 0,
       cities: citiesData?.data?.length || 0,
       pincodes: pincodesData?.data?.length || 0,
+      areas: areasData?.data?.length || 0,
     };
   };
 
@@ -231,6 +245,14 @@ export function LocationsPage() {
                     </Badge>
                   )}
                 </TabsTrigger>
+                <TabsTrigger value="areas">
+                  Areas
+                  {stats.areas > 0 && (
+                    <Badge variant="secondary" className="ml-2">
+                      {stats.areas}
+                    </Badge>
+                  )}
+                </TabsTrigger>
               </TabsList>
 
               {/* Actions */}
@@ -314,6 +336,16 @@ export function LocationsPage() {
                     </Button>
                   </>
                 )}
+
+                {activeTab === 'areas' && (
+                  <Button
+                    size="sm"
+                    onClick={() => setShowCreateArea(true)}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Area
+                  </Button>
+                )}
               </div>
             </div>
 
@@ -374,8 +406,8 @@ export function LocationsPage() {
                   <SelectContent>
                     <SelectItem value="all">All States</SelectItem>
                     {stateNames.map((state) => (
-                      <SelectItem key={state} value={state}>
-                        {state}
+                      <SelectItem key={state.id || state.name} value={state.name}>
+                        {state.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -416,6 +448,13 @@ export function LocationsPage() {
                 isLoading={pincodesLoading}
               />
             </TabsContent>
+
+            <TabsContent value="areas" className="space-y-4">
+              <AreasTable
+                data={areasData?.data || []}
+                isLoading={areasLoading}
+              />
+            </TabsContent>
           </Tabs>
         </CardContent>
       </Card>
@@ -439,6 +478,11 @@ export function LocationsPage() {
       <CreatePincodeDialog
         open={showCreatePincode}
         onOpenChange={setShowCreatePincode}
+      />
+
+      <CreateAreaDialog
+        open={showCreateArea}
+        onOpenChange={setShowCreateArea}
       />
 
       <BulkImportLocationDialog
